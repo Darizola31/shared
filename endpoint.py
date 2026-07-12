@@ -43,7 +43,7 @@ class EndpointCipher:
                         )
 
         #Decrypt
-        key = base64.urlsafe_b64encode(kdf.derive(self.password.encode()))
+        key = base64.urlsafe_b64encode(kdf.derive(self.password))
         f = Fernet(key)
         return f.decrypt(message.encode()).decode()
 
@@ -59,11 +59,11 @@ def encode():
 @app.route("/decode", methods=["POST"])
 def decode():
     password = request.form.get("password")
-    salt = base64.urlsafe_b64decode(request.form.get("salt")).encode()
+    salt = base64.urlsafe_b64decode(request.form.get("salt"))
     message = request.form.get("message")
 
     cipher = EndpointCipher(password, salt)
-    decrypted_message = cipher.decode(message.encode())
+    decrypted_message = cipher.decode(message)
     return decrypted_message
 
 
